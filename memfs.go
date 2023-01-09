@@ -56,6 +56,7 @@ func (rootFS *FS) MkdirAll(path string, perm os.FileMode) error {
 			newDir := &dir{
 				name:     part,
 				perm:     perm,
+				modTime:  time.Now(),
 				children: make(map[string]childI),
 			}
 			cur.children[part] = newDir
@@ -283,6 +284,7 @@ func (rootFS *FS) Open(name string) (fs.File, error) {
 		handle := &File{
 			name:    cc.name,
 			perm:    cc.perm,
+			modTime: cc.modTime,
 			content: bytes.NewBuffer(cc.content.Bytes()),
 		}
 		return handle, nil

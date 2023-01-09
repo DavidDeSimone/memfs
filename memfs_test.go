@@ -62,6 +62,25 @@ func TestMemFS(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	info, err := fs.Stat(rootFS, "foo/bar/baz.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = rootFS.WriteFile("foo/bar/baz.txt", body, 0777)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	secondInfo, err := fs.Stat(rootFS, "foo/bar/baz.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if info.ModTime().Equal(secondInfo.ModTime()) {
+		t.Fatal("Modification failed to be set after write of foo/bar/baz.txt")
+	}
+
 	if diff := cmp.Diff(body, gotBody); diff != "" {
 		t.Fatalf("write/read baz.txt mismatch %s", diff)
 	}

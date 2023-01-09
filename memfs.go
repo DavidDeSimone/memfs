@@ -181,6 +181,7 @@ func (rootFS *FS) create(path string) (*File, error) {
 	newFile := &File{
 		name:    filePart,
 		perm:    0666,
+		modTime: time.Now(),
 		content: &bytes.Buffer{},
 	}
 	dir.children[filePart] = newFile
@@ -207,6 +208,7 @@ func (rootFS *FS) WriteFile(path string, data []byte, perm os.FileMode) error {
 	}
 	f.content = bytes.NewBuffer(data)
 	f.perm = perm
+	f.modTime = time.Now()
 	return nil
 }
 
